@@ -1,0 +1,8 @@
+# Dependencias do projeto (Python 3.9+)
+# Instale com:  pip install -r requirements.txt
+
+pandas>=2.0
+matplotlib>=3.7
+
+# Opcional - necessario apenas para abrir/executar o notebook python/analise.ipynb
+notebook>=7.0

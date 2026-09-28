@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Banco local temporario (a base e recriada por python/gerar_dados.py)
+*.db
+*.sqlite
+
+# Sistema operacional / editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# OBS: os arquivos de entrega NAO sao ignorados de proposito:
+#   dados/*.csv       -> resultados das consultas
+#   graficos/*.png    -> graficos da analise
