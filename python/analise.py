@@ -58,6 +58,23 @@ def brl(x):
     return "US$ {:,.2f}".format(x)
 
 
+# Compatibilidade entre versoes do matplotlib para o boxplot:
+# os argumentos 'labels'/'vert' foram substituidos por 'tick_labels'/'orientation'
+# nas versoes 3.9/3.10. O helper abaixo escolhe o argumento certo para a versao
+# instalada, funcionando tanto em matplotlib antigo (>=3.7) quanto no atual.
+_MPL = tuple(int(p) for p in matplotlib.__version__.split(".")[:2])
+
+
+def boxplot_compat(ax, dados, rotulos, horizontal):
+    kw = dict(patch_artist=True, medianprops=dict(color=ACENTO2, linewidth=2))
+    kw["tick_labels" if _MPL >= (3, 9) else "labels"] = rotulos
+    if _MPL >= (3, 10):
+        kw["orientation"] = "horizontal" if horizontal else "vertical"
+    else:
+        kw["vert"] = not horizontal
+    return ax.boxplot(dados, **kw)
+
+
 # ===========================================================================
 # 1) IMPORTACAO DOS DADOS
 # ===========================================================================
@@ -154,7 +171,8 @@ ax.axvline(media, color=ACENTO2, linestyle="--", linewidth=2,
            label="Media = {}".format(brl(media)))
 ax.axvline(mediana, color="#333333", linestyle=":", linewidth=2,
            label="Mediana = {}".format(brl(mediana)))
-ax.set_title("Distribuicao dos salarios (base HR - 106 funcionarios)", fontweight="bold")
+ax.set_title("Distribuicao dos salarios (base HR - {} funcionarios)".format(sal.count()),
+             fontweight="bold")
 ax.set_xlabel("Salario (US$)")
 ax.set_ylabel("Quantidade de funcionarios")
 ax.legend()
@@ -169,8 +187,7 @@ ordem = (df1.groupby("DEPARTMENT_NAME")["SALARY"].median()
          .sort_values().index.tolist())
 dados_box = [df1.loc[df1["DEPARTMENT_NAME"] == d, "SALARY"].values for d in ordem]
 fig, ax = plt.subplots(figsize=(10, 6))
-bp = ax.boxplot(dados_box, orientation="horizontal", tick_labels=ordem, patch_artist=True,
-                medianprops=dict(color=ACENTO2, linewidth=2))
+bp = boxplot_compat(ax, dados_box, ordem, horizontal=True)
 for caixa in bp["boxes"]:
     caixa.set(facecolor=ACENTO, alpha=0.6)
 ax.set_title("Salario por departamento (ordenado pela mediana)", fontweight="bold")
@@ -204,8 +221,7 @@ ordem_reg = (df2.groupby("REGION_NAME")["SALARY"].median()
              .sort_values().index.tolist())
 dados_reg = [df2.loc[df2["REGION_NAME"] == r, "SALARY"].values for r in ordem_reg]
 fig, ax = plt.subplots(figsize=(8, 5))
-bp = ax.boxplot(dados_reg, orientation="vertical", tick_labels=ordem_reg, patch_artist=True,
-                medianprops=dict(color=ACENTO2, linewidth=2))
+bp = boxplot_compat(ax, dados_reg, ordem_reg, horizontal=False)
 for caixa in bp["boxes"]:
     caixa.set(facecolor=ACENTO3, alpha=0.6)
 ax.set_title("Distribuicao salarial por regiao", fontweight="bold")
