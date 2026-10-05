@@ -314,4 +314,4 @@ jupyter notebook python/analise.ipynb
 O roteiro da apresentação técnica (até 7 minutos), respondendo às perguntas exigidas na
 Seção 3.3 do enunciado, está em [`docs/roteiro_video.md`](docs/roteiro_video.md).
 
-**Link do vídeo:** _(inserir aqui o link do vídeo de apresentação antes da entrega no AVA)_
+**Link do vídeo:**(https://youtu.be/F2zXRP_djwg)
